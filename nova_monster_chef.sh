@@ -127,6 +127,7 @@ read node_password
 echo "Please enter the API Key for $node_user: "
 read node_api
 
+sudo apt-get install sshpass -y
 echo "Password: $PASSWORD"
 sshpass -p $PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet -l root $IP 'source <(curl -s https://raw.github.com/rcbops/support-tools/master/chef-install/install-chef-server.sh) > /dev/null;exit'
 echo "Password: $PASSWORD"
