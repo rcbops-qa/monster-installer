@@ -2,8 +2,9 @@ change_creds(){
   echo "Please enter the username of the Rackspace Public Cloud account for your Monster server: "; read CHEF_USER
   echo "Please enter the account number for $CHEF_USER: "; read CHEF_ID
   echo "Please enter the API Key for $CHEF_USER: "; read CHEF_API
+  echo "Please enter the region for the Monster server (DFW, IAD, ORD): "; read REGION1
 
-  printf "export OS_AUTH_URL=https://identity.api.rackspacecloud.com/v2.0/\nexport OS_AUTH_SYSTEM=rackspace\nexport OS_REGION_NAME=DFW\nexport OS_USERNAME=$CHEF_USER\nexport OS_TENANT_NAME=$CHEF_ID\nexport NOVA_RAX_AUTH=1\nexport OS_PASSWORD=$CHEF_API\nexport OS_PROJECT_ID=$CHEF_ID\nexport OS_NO_CACHE=1" > ~/.bash_profile
+  printf "export OS_AUTH_URL=https://identity.api.rackspacecloud.com/v2.0/\nexport OS_AUTH_SYSTEM=rackspace\nexport OS_REGION_NAME=$REGION1\nexport OS_USERNAME=$CHEF_USER\nexport OS_TENANT_NAME=$CHEF_ID\nexport NOVA_RAX_AUTH=1\nexport OS_PASSWORD=$CHEF_API\nexport OS_PROJECT_ID=$CHEF_ID\nexport OS_NO_CACHE=1" > ~/.bash_profile
   chmod 600 ~/.bash_profile
   source ~/.bash_profile
   nova credentials 2> nova.error
@@ -130,6 +131,9 @@ echo "You will now need to install and configure Monster on $chef_name."
 echo "Please enter the username for the account that Monster will build in: "; read node_user
 echo "Please enter the password for $node_user: "; read node_password
 echo "Please enter the API Key for $node_user: "; read node_api
+echo "Please enter the region for the Monster server (DFW, IAD, ORD): "; read REGION2
+echo "Please enter the Razor IP (if you have one): "; read razor_ip
+echo "Please enter the default password for nodes in the cluster: "; read default_pass
 
 sudo apt-get install sshpass -y
 echo "Password: $PASSWORD"
@@ -145,7 +149,7 @@ sshpass -p $PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyCheckin
   source ~/monster/.venv/bin/activate;
   pip install -r ~/monster/requirements.txt > /dev/null;
   cd ~/monster;
-  printf \"rackspace:\n  user: $node_user\n  api_key: $node_api\n  auth_url: https://identity.api.rackspacecloud.com/v2.0/\n  region: dfw\n  plugin: rackspace\ncloudfiles:\n  user: $node_user\n  password: $node_password\" > secret.yaml"
+  printf \"rackspace:\n  user: $node_user\n  api_key: $node_api\n  auth_url: https://identity.api.rackspacecloud.com/v2.0/\n  region: $REGION2\n  plugin: rackspace\ncloudfiles:\n  user: $node_user\n  password: $node_password\nrazor:\n    ip: $razor_ip\ndefault_pass: $default_pass\" > secret.yaml"
 rm nova.error
 printf "Monster has been installed and configured on $chef_name!\nIP: $IP\nPassword: $PASSWORD\n"
 printf "The configuration file can be found in the file root@$IP:~/monster/secret.yaml\n"
