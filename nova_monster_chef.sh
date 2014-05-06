@@ -140,7 +140,10 @@ echo "Password: $PASSWORD"
 sshpass -p $PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet -l root $IP 'source <(curl -s https://raw.github.com/rcbops/support-tools/master/chef-install/install-chef-server.sh) > /dev/null;exit'
 echo "Password: $PASSWORD"
 sshpass -p $PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet -l root $IP "
-  apt-get install -y git python-pip virtualenvwrapper python-dev libevent-dev > /dev/null;
+  apt-get install -y git python-pip virtualenvwrapper python-dev libevent-dev python-software-properties > /dev/null;
+  add-apt-repository -y ppa:rwky/redis
+  apt-get update
+  apt-get install -y redis-server
   git clone https://github.com/rcbops-qa/rcbops-qa.git /opt/cookbooks/rcbops-qa > /dev/null;
   git clone https://github.com/opscode-cookbooks/yum.git /opt/cookbooks/yum > /dev/null;
   knife cookbook upload -a -o /opt/cookbooks/ > /dev/null;
@@ -149,6 +152,7 @@ sshpass -p $PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyCheckin
   source ~/monster/.venv/bin/activate;
   pip install -r ~/monster/requirements.txt > /dev/null;
   cd ~/monster;
+  python setup.py install;
   printf \"rackspace:\n  user: $node_user\n  api_key: $node_api\n  auth_url: https://identity.api.rackspacecloud.com/v2.0/\n  region: $REGION2\n  plugin: rackspace\ncloudfiles:\n  user: $node_user\n  password: $node_password\nrazor:\n    ip: $razor_ip\ndefault_pass: $default_pass\" > secret.yaml"
 rm nova.error
 printf "Monster has been installed and configured on $chef_name!\nIP: $IP\nPassword: $PASSWORD\n"
