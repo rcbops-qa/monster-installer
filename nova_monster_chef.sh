@@ -137,7 +137,7 @@ echo "Please enter the default password for nodes in the cluster: "; read defaul
 
 sudo apt-get install sshpass -y
 echo "Password: $PASSWORD"
-sshpass -p $PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet -l root $IP 'source <(curl -s https://raw.github.com/rcbops/support-tools/master/chef-install/install-chef-server.sh) > /dev/null;exit'
+sshpass -p $PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet -l root $IP 'source <(curl -s https://raw.githubusercontent.com/rcbops/support-tools/master/chef-install/install-chef-server.sh)> /dev/null;exit'
 echo "Password: $PASSWORD"
 sshpass -p $PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=quiet -l root $IP "
   apt-get install -y git python-pip virtualenvwrapper python-dev libevent-dev python-software-properties > /dev/null;
